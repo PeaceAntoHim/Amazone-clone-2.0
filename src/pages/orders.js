@@ -7,6 +7,8 @@ import Head from 'next/head'
 
 function orders({ orders }) {
     const [session] = useSession()
+
+    console.log(orders);
     
     return (
         <>
@@ -50,7 +52,12 @@ export async function getServerSideProps(context) {
         return { props: {} }
     }
   
-    const stripeOrders = await db.collection('users').doc(session.user.email).collection('orders').orderBy('timestamp', 'desc').get()
+    const stripeOrders = await db
+        .collection('users')
+        .doc(session.user.email)
+        .collection('orders')
+        .orderBy('timestamp', 'desc')
+        .get()
 
     const orders = await Promise.all(
         stripeOrders.docs.map(async order => ({
@@ -59,7 +66,7 @@ export async function getServerSideProps(context) {
             amountShipping: order.data().amount_shipping,
             images: order.data().images,
             timestamp: moment(order.data().timestamp.toDate()).unix(),
-            titles: order.data().title,
+            titles: order.data().title ?? null,
             items: (
                 await stripe.checkout.sessions.listLineItems(order.id, {
                     limit: 100

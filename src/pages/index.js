@@ -19,7 +19,7 @@ export default function Home({products}) {
   return (
     <div className="bg-gray-100">
       <Head>
-        <title>Amazon Clone by Khalid Saifullah</title>
+        <title>Amazon Clone by Frans Sebatian</title>
       </Head>
 
       <Header products={products} setShowCart={setShowCart} showCart={showCart} />
